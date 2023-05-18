@@ -1,1 +1,2 @@
-Browser version of something bewtween a sketchpad and an Etch-A-Sketch
+# Browser version of something between a Sketchpad and an Etch-A-Sketch
+
