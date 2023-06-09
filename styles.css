@@ -1,0 +1,15 @@
+#container {
+  /* background-color: cyan; */
+  position: relative;
+  margin: auto;
+  max-width: fit-content;
+  max-height: fit-content;
+  padding: 0;
+}
+
+.box {
+  border: 1px solid black;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
