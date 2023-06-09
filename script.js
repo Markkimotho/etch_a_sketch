@@ -1,14 +1,18 @@
-function createGrid(n) {
-    const container = document.getElementById("container");
-    
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-            let square = document.createElement("div");
-            square.className = "box";
-            container.appendChild(square);
-        }
-        let newLine = document.createElement("br");
-        container.appendChild(newLine);   
+const gridSize = 100; // Change this value to adjust the grid size
+
+// Get the container element
+const container = document.querySelector('.container');
+
+// Set the grid size as a CSS variable
+container.style.setProperty('--grid-size', gridSize);
+
+// Create the grid squares
+function createGrid(gridSize) {
+    for (let i = 0; i < gridSize * gridSize; i++) {
+    const square = document.createElement('div');
+    square.classList.add('grid-square');
+    container.appendChild(square);
     }
 }
-createGrid(16);
+
+createGrid(gridSize);

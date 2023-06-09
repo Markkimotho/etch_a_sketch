@@ -1,15 +1,13 @@
-#container {
-  /* background-color: cyan; */
-  position: relative;
+.container {
+  display: flex;
+  flex-wrap: wrap;
   margin: auto;
-  max-width: fit-content;
-  max-height: fit-content;
-  padding: 0;
+  width: 480px;
+  height: 480px;
 }
 
-.box {
+.grid-square {
+  width: calc(100% / var(--grid-size));
+  height: calc(100% / var(--grid-size));
   border: 1px solid black;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-}
+  box-sizing: border-box;
