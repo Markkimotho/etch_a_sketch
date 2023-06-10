@@ -1,14 +1,29 @@
-.container {
+body{
+  background-color: azure;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+header{
+  width: 480px;
+  margin: auto;
+  align-items: center;
+  text-align: center;
+}
+
+
+#container {
+  background-color: aliceblue;
   display: flex;
   flex-wrap: wrap;
   margin: auto;
-  width: 480px;
-  height: 480px;
+  border: 1px solid #000000;
+  width: 360px;
+  height: 360px;
 }
 
 .grid-square {
   width: calc(100% / var(--grid-size));
   height: calc(100% / var(--grid-size));
-  border: 1px solid black;
+  border: .01px solid rgb(28, 28, 28);
   box-sizing: border-box;
 }
