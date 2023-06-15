@@ -2,7 +2,9 @@ body{
   background-color: azure;
   font-family:Arial, Helvetica, sans-serif;
 }
-
+.sketch-area{
+  margin-top: 50px;
+}
 header{
   width: 480px;
   margin: auto;
@@ -10,13 +12,25 @@ header{
   text-align: center;
 }
 
+.buttons{
+  width: fit-content;
+  margin: auto;
+  display: flex;
+  align-content: space-between;
+  justify-content:space-between;
+  margin-bottom: 20px;
+}
+
+button:hover,
+input:hover{
+  cursor: pointer;
+}
 
 #container {
   background-color: aliceblue;
   display: flex;
   flex-wrap: wrap;
   margin: auto;
-  border: 1px solid #000000;
   width: 360px;
   height: 360px;
 }
@@ -26,4 +40,16 @@ header{
   height: calc(100% / var(--grid-size));
   border: .01px solid rgb(28, 28, 28);
   box-sizing: border-box;
+}
+
+.slider{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  margin: 10px auto;
+}
+
+label span{
+  font-weight: bold;
 }

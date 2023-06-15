@@ -13,17 +13,23 @@
     <title>Etch-A-Sketch</title>
 </head>
 <body>
+    <div class="sketch-area">
     <header>
         <h2 style="font-size: 20px">Sketch Pad x Etch-A-Sketch</h2>
     </header>
-    <div id="container"></div>
-    <div class="buttons">
-        <label for="color-picker">Pick Color: </label>
-        <input type="color" id="color-picker" name="Color Picker">
-        <button class="random-color">Random Color</button>
-        <button class="eraser">Eraser</button>
-        <button class="clear">Clean Pad</button>
+        <div class="buttons">
+            <!-- <label for="color-picker">Pick Color: </label> -->
+            <input type="color" id="color-picker" name="Color Picker">
+            <button class="random-color">Random Color</button>
+            <button class="eraser">Eraser</button>
+            <button class="clear">Clear Pad</button>
 
+        </div>
+        <div id="container"></div>
+        <div class="slider">
+            <label for="slider" class="gridSizeValue"> Size: <span>16 x 16<span></label><br>
+            <input type="range" id="slider" min="1" max="100" value="16">
+        </div>
     </div>
 </body>
 </html>
