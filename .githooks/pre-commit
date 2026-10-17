@@ -1,3 +1,2 @@
 #!/bin/sh
-# Gate tests: pure logic, < 1s. Enable with: git config core.hooksPath .githooks
-exec npm test --silent
+exec node --test
