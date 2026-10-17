@@ -1,35 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
-    <link rel="manifest" href="favicon/site.webmanifest">
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <script defer src="script.js"></script>
-    <title>Etch-A-Sketch</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A browser Etch-A-Sketch with drawing tools, undo, export, and a two-player Paint Race.">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="manifest" href="favicon/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Leckerli+One&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="src/main.js"></script>
+  <title>Etch-A-Sketch</title>
 </head>
 <body>
-    <div class="sketch-area">
-    <header>
-        <h2 style="font-size: 20px">Sketch Pad x Etch-A-Sketch</h2>
-    </header>
-        <div class="buttons">
-            <!-- <label for="color-picker">Pick Color: </label> -->
-            <input type="color" id="color-picker" name="Color Picker">
-            <button class="random-color">Random Color</button>
-            <button class="eraser">Eraser</button>
-            <button class="clear">Clear Pad</button>
+  <header class="masthead">
+    <h1 class="logo">Etch A Sketch</h1>
+    <nav class="tabs" role="tablist" aria-label="Mode">
+      <button role="tab" id="tab-sketch" aria-controls="sketch-view" aria-selected="true">✏️ Sketch</button>
+      <button role="tab" id="tab-race" aria-controls="race-view" aria-selected="false">🏁 Paint Race</button>
+    </nav>
+  </header>
 
+  <main>
+    <!-- ================= SKETCH ================= -->
+    <section id="sketch-view" role="tabpanel" aria-labelledby="tab-sketch">
+      <div class="toolbar" role="toolbar" aria-label="Tools">
+        <div class="tool-group" id="tools">
+          <button class="tool" data-tool="pen" title="Pen (B)">🖊️<span>Pen</span></button>
+          <button class="tool" data-tool="rainbow" title="Rainbow (R)">🌈<span>Rainbow</span></button>
+          <button class="tool" data-tool="shade" title="Shade: darkens 10% per pass (S)">🌑<span>Shade</span></button>
+          <button class="tool" data-tool="lighten" title="Lighten: 10% per pass (L)">☀️<span>Lighten</span></button>
+          <button class="tool" data-tool="eraser" title="Eraser (E)">🧽<span>Eraser</span></button>
+          <button class="tool" data-tool="fill" title="Fill bucket (F)">🪣<span>Fill</span></button>
+          <button class="tool" data-tool="picker" title="Pick a color from the drawing (I)">💧<span>Pick</span></button>
         </div>
-        <div id="container"></div>
-        <div class="slider">
-            <label for="slider" class="gridSizeValue"> Size: <span>16 x 16<span></label><br>
-            <input type="range" id="slider" min="1" max="100" value="16">
+        <div class="palette" id="palette" aria-label="Colors">
+          <label class="color-well" title="Custom color">
+            <input type="color" id="color-picker" value="#2b2d42" aria-label="Custom color">
+          </label>
         </div>
-    </div>
+      </div>
+
+      <div class="frame" id="sketch-frame">
+        <div class="screen">
+          <div class="board" id="board" aria-label="Drawing board"></div>
+          <div class="stylus" id="stylus" aria-hidden="true"></div>
+        </div>
+        <div class="frame-bottom">
+          <div class="knob" id="knob-x" role="slider" tabindex="0" aria-label="Left knob: move stylus left and right" title="Drag, scroll, or use ← → to etch sideways"></div>
+          <span class="brand">MAGIC SCREEN</span>
+          <div class="knob" id="knob-y" role="slider" tabindex="0" aria-label="Right knob: move stylus up and down" title="Drag, scroll, or use ↑ ↓ to etch up and down"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="size-control">
+          <label for="slider">Grid <output id="size-label">16 × 16</output></label>
+          <input type="range" id="slider" min="1" max="100" value="16">
+        </div>
+        <div class="toggles">
+          <button class="toggle" id="toggle-lines" aria-pressed="true" title="Grid lines (G)">▦ Lines</button>
+          <button class="toggle" id="toggle-hover" aria-pressed="false" title="Draw by hovering without clicking, like the classic (H)">🖱️ Hover draw</button>
+        </div>
+        <div class="actions">
+          <button id="undo" title="Undo (Ctrl/⌘ Z)" disabled>↶ Undo</button>
+          <button id="redo" title="Redo (Ctrl/⌘ Shift Z)" disabled>↷ Redo</button>
+          <button id="shake" class="danger" title="Shake to clear (X)">🫨 Shake</button>
+          <button id="save-png" title="Download as PNG">⬇ PNG</button>
+        </div>
+      </div>
+      <p class="hint">Draw with mouse or touch, or etch with the knobs and arrow keys. Shortcuts: B R S L E F I tools · G lines · H hover · X shake.</p>
+    </section>
+
+    <!-- ================= RACE ================= -->
+    <section id="race-view" role="tabpanel" aria-labelledby="tab-race" hidden>
+      <div class="hud" id="hud">
+        <div class="player-card p1">
+          <span class="avatar">🦊</span>
+          <div class="pc-body">
+            <strong class="pc-name">Fox</strong>
+            <div class="meter" role="progressbar" aria-label="Fox progress to goal" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+            <small><b class="pc-largest">1</b> biggest patch · <span class="pc-total">1</span> painted</small>
+          </div>
+        </div>
+        <div class="clock">
+          <span id="race-timer">60.0</span>
+          <small id="race-goal">goal 144</small>
+        </div>
+        <div class="player-card p2">
+          <span class="avatar">🐸</span>
+          <div class="pc-body">
+            <strong class="pc-name">Frog</strong>
+            <div class="meter" role="progressbar" aria-label="Player 2 progress to goal" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+            <small><b class="pc-largest">1</b> biggest patch · <span class="pc-total">1</span> painted</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="frame race-frame" id="race-frame">
+        <div class="screen" id="race-screen">
+          <div class="board" id="race-board" aria-label="Race board"></div>
+          <div class="layer" id="race-items" aria-hidden="true"></div>
+          <div class="layer" id="race-avatars" aria-hidden="true"></div>
+          <div class="overlay" id="race-overlay">
+            <form id="race-setup" class="setup">
+              <h2>Paint Race</h2>
+              <p class="rules">Two painters, one board. Paint cells your color, steal theirs. <b>The biggest connected patch wins:</b> first to the goal size, or the biggest when time runs out.</p>
+              <fieldset>
+                <legend>Opponent</legend>
+                <label><input type="radio" name="mode" value="cpu" checked> 🤖 Robo (CPU)</label>
+                <label><input type="radio" name="mode" value="2p"> 🐸 Friend (same keyboard)</label>
+              </fieldset>
+              <fieldset class="cpu-only">
+                <legend>Robo level</legend>
+                <label><input type="radio" name="level" value="easy"> Easy</label>
+                <label><input type="radio" name="level" value="normal" checked> Normal</label>
+                <label><input type="radio" name="level" value="hard"> Hard</label>
+              </fieldset>
+              <fieldset>
+                <legend>Board</legend>
+                <label><input type="radio" name="size" value="16"> Small</label>
+                <label><input type="radio" name="size" value="24" checked> Medium</label>
+                <label><input type="radio" name="size" value="32"> Large</label>
+              </fieldset>
+              <fieldset>
+                <legend>Time</legend>
+                <label><input type="radio" name="time" value="30"> 30s</label>
+                <label><input type="radio" name="time" value="60" checked> 60s</label>
+                <label><input type="radio" name="time" value="90"> 90s</label>
+              </fieldset>
+              <p class="keys"><b>🦊 Fox:</b> W A S D <span class="cpu-only">or arrow keys</span><span class="two-p-only" hidden> · <b>🐸 Frog:</b> arrow keys</span> · Space pauses. On touch: swipe or use the pads.</p>
+              <p class="keys">Grab ⚡ for a speed burst and 💥 for a paint splash.</p>
+              <button type="submit" class="go">Start race</button>
+            </form>
+            <div class="countdown" id="race-countdown" hidden></div>
+            <div class="paused" id="race-paused" hidden>
+              <h2>Paused</h2>
+              <button type="button" id="race-resume" class="go">Resume</button>
+            </div>
+            <div class="result" id="race-result" hidden>
+              <div class="result-avatar" id="result-avatar"></div>
+              <h2 id="result-title"></h2>
+              <p id="result-detail"></p>
+              <div class="result-actions">
+                <button type="button" id="race-again" class="go">Rematch</button>
+                <button type="button" id="race-settings">Change settings</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="frame-bottom">
+          <span class="knob static" aria-hidden="true"></span>
+          <span class="brand">PAINT RACE</span>
+          <span class="knob static" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="dpads" id="dpads">
+        <div class="dpad" data-player="0" aria-label="Fox controls">
+          <button data-dir="up" aria-label="Fox up">▲</button>
+          <button data-dir="left" aria-label="Fox left">◀</button>
+          <button data-dir="right" aria-label="Fox right">▶</button>
+          <button data-dir="down" aria-label="Fox down">▼</button>
+        </div>
+        <div class="dpad" data-player="1" aria-label="Frog controls" hidden>
+          <button data-dir="up" aria-label="Frog up">▲</button>
+          <button data-dir="left" aria-label="Frog left">◀</button>
+          <button data-dir="right" aria-label="Frog right">▶</button>
+          <button data-dir="down" aria-label="Frog down">▼</button>
+        </div>
+      </div>
+
+      <aside class="scoreboard" aria-labelledby="scoreboard-title">
+        <div class="sb-head">
+          <h3 id="scoreboard-title">🏆 Scoreboard</h3>
+          <div>
+            <button id="mute" class="link" aria-pressed="false" title="Sound on/off">🔊</button>
+            <button id="reset-stats" class="link">Reset</button>
+          </div>
+        </div>
+        <ul class="sb-wins">
+          <li><span>🦊 Fox</span><b data-stat="p1">0</b></li>
+          <li><span>🐸 Frog</span><b data-stat="p2">0</b></li>
+          <li><span>🤖 Robo</span><b data-stat="cpu">0</b></li>
+          <li><span>🤝 Draws</span><b data-stat="draws">0</b></li>
+        </ul>
+        <p class="sb-extra" id="sb-extra"></p>
+      </aside>
+    </section>
+  </main>
+  <canvas id="confetti" aria-hidden="true"></canvas>
 </body>
 </html>

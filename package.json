@@ -1,0 +1,12 @@
+{
+  "name": "etch-a-sketch",
+  "private": true,
+  "type": "module",
+  "description": "Browser Etch-A-Sketch with a two-player Paint Race. Vanilla HTML/CSS/JS, no dependencies.",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test \"tests/*.test.js\"",
+    "eval": "node tests/evals/cpu-strength.eval.js",
+    "smoke": "node tests/e2e/smoke.mjs"
+  }
+}
